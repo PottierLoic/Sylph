@@ -80,6 +80,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e16d2d3311acee920a9eb8d33b8cbc1787ce4a264e85f964c2404b969bdcd487"
 
 [[package]]
+name = "app"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "cgmath",
+ "log",
+ "png",
+ "pretty_env_logger",
+ "thiserror",
+ "tobj",
+ "vulkanalia",
+ "winit",
+]
+
+[[package]]
 name = "approx"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -368,6 +383,10 @@ name = "downcast-rs"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "75b325c5dbd37f80359721ad39aca5a29fb04c89279657cffdda8736d0c0b9d2"
+
+[[package]]
+name = "ecs"
+version = "0.0.1"
 
 [[package]]
 name = "env_logger"
@@ -1078,21 +1097,6 @@ name = "strict-num"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6637bab7722d379c8b41ba849228d680cc12d0a45ba1fa2b48f2a30577a06731"
-
-[[package]]
-name = "sylph"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "cgmath",
- "log",
- "png",
- "pretty_env_logger",
- "thiserror",
- "tobj",
- "vulkanalia",
- "winit",
-]
 
 [[package]]
 name = "syn"
