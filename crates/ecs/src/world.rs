@@ -3,6 +3,7 @@ use std::collections::HashMap;
 
 use crate::component::{Component, ComponentStorage, DenseComponentStorage};
 use crate::entity::{Entity, EntityManager};
+use crate::components::{Transform, Name};
 
 #[derive(Default)]
 pub struct World {
@@ -12,8 +13,11 @@ pub struct World {
 }
 
 impl World {
-  pub fn spawn(&mut self) -> Entity {
-    self.entities.create()
+  pub fn spawn(&mut self, name: impl Into<String>) -> Entity {
+    let entity = self.entities.create();
+    self.insert(entity, Transform::default());
+    self.insert(entity, Name(name.into()));
+    entity
   }
 
   pub fn despawn(&mut self, entity: Entity) -> bool {
