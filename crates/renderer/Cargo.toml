@@ -1,0 +1,10 @@
+[package]
+name = "renderer"
+version = "0.0.1"
+edition = "2024"
+
+[dependencies]
+anyhow = "1"
+log = "0.4"
+thiserror = "1"
+vulkanalia = { version = "=0.28.0", features = ["libloading", "provisional", "window"] }
