@@ -59,7 +59,7 @@ fn main() -> Result<()> {
 struct App {
   entry: Entry,
   instance: Instance,
-  data: AppData
+  data: AppData,
 }
 
 impl App {
@@ -69,7 +69,11 @@ impl App {
       let entry = Entry::new(loader).map_err(|b| anyhow!("{}", b))?;
       let mut data = AppData::default();
       let instance = create_instance(window, &entry, &mut data)?;
-      Ok(Self { entry, instance, data })
+      Ok(Self {
+        entry,
+        instance,
+        data,
+      })
     }
   }
 
@@ -80,7 +84,9 @@ impl App {
   unsafe fn destroy(&mut self) {
     unsafe {
       if VALIDATION_ENABLED {
-        self.instance.destroy_debug_utils_messenger_ext(self.data.messenger, None);
+        self
+          .instance
+          .destroy_debug_utils_messenger_ext(self.data.messenger, None);
       }
       self.instance.destroy_instance(None);
     }
@@ -150,8 +156,8 @@ unsafe fn create_instance(window: &Window, entry: &Entry, data: &mut AppData) ->
       .message_severity(vk::DebugUtilsMessageSeverityFlagsEXT::all())
       .message_type(
         vk::DebugUtilsMessageTypeFlagsEXT::GENERAL
-        | vk::DebugUtilsMessageTypeFlagsEXT::VALIDATION
-        | vk::DebugUtilsMessageTypeFlagsEXT::PERFORMANCE,
+          | vk::DebugUtilsMessageTypeFlagsEXT::VALIDATION
+          | vk::DebugUtilsMessageTypeFlagsEXT::PERFORMANCE,
       )
       .user_callback(Some(debug_callback));
 
