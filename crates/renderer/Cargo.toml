@@ -2,6 +2,7 @@
 name = "renderer"
 version = "0.0.1"
 edition = "2024"
+build = "build.rs"
 
 [dependencies]
 anyhow = "1"
@@ -10,3 +11,6 @@ thiserror = "1"
 vulkanalia = { version = "=0.28.0", features = ["libloading", "provisional", "window"] }
 winit = "0.29"
 bytemuck = "1"
+
+[build-dependencies]
+shaderc = "0.8"

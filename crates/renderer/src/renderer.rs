@@ -11,7 +11,7 @@ use winit::window::Window;
 use crate::context::VulkanContext;
 use crate::device::{create_logical_device, pick_physical_device};
 use crate::instance::create_instance;
-use crate::pipeline::create_render_pass;
+use crate::pipeline::{create_graphics_pipeline, create_pipeline_layout, create_render_pass};
 use crate::swapchain::create_swapchain;
 
 pub struct Renderer {
@@ -26,6 +26,8 @@ pub struct Renderer {
   pub image_available_semaphore: vk::Semaphore,
   pub render_finished_semaphore: vk::Semaphore,
   pub images: Vec<vk::Image>,
+  pub pipeline_layout: vk::PipelineLayout,
+  pub pipeline: vk::Pipeline,
 }
 
 impl Renderer {
@@ -50,6 +52,17 @@ impl Renderer {
         create_swapchain(&instance, &device, physical_device, surface, window)?;
 
       let render_pass = create_render_pass(&device, format)?;
+
+      let pipeline_layout = create_pipeline_layout(&device)?;
+      let pipeline = create_graphics_pipeline(
+        &device,
+        render_pass,
+        pipeline_layout,
+        extent,
+        "triangle.vert.spv",
+        "triangle.frag.spv",
+      )?;
+
       let framebuffers = image_views
         .iter()
         .map(|&view| {
@@ -106,6 +119,8 @@ impl Renderer {
         image_available_semaphore,
         render_finished_semaphore,
         images,
+        pipeline_layout,
+        pipeline,
       })
     }
   }
@@ -121,6 +136,7 @@ impl Renderer {
 
       let begin_info =
         vk::CommandBufferBeginInfo::builder().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT);
+
       self
         .context
         .device
@@ -168,6 +184,16 @@ impl Renderer {
         &render_pass_info,
         vk::SubpassContents::INLINE,
       );
+
+      self.context.device.cmd_bind_pipeline(
+        self.command_buffer,
+        vk::PipelineBindPoint::GRAPHICS,
+        self.pipeline,
+      );
+      self
+        .context
+        .device
+        .cmd_draw(self.command_buffer, 3, 1, 0, 0);
 
       self.context.device.cmd_end_render_pass(self.command_buffer);
       self

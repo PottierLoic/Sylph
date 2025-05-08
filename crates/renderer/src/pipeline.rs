@@ -1,6 +1,7 @@
 use std::ffi::CString;
 use std::fs::File;
 use std::io::Read;
+use std::path::Path;
 
 use anyhow::Result;
 use vulkanalia::Device;
@@ -159,14 +160,29 @@ pub unsafe fn create_graphics_pipeline(
 
 unsafe fn create_shader_module(device: &Device, code: &[u8]) -> Result<vk::ShaderModule> {
   unsafe {
-    let info = vk::ShaderModuleCreateInfo::builder().code(bytemuck::cast_slice(code));
+    if code.len() % 4 != 0 {
+      return Err(anyhow::anyhow!("Shader code size must be a multiple of 4"));
+    }
+    let aligned_code: &[u32] = bytemuck::cast_slice(code);
+    let info = vk::ShaderModuleCreateInfo::builder()
+      .code(aligned_code)
+      .code_size(code.len());
+
     Ok(device.create_shader_module(&info, None)?)
   }
 }
 
 fn read_spv(path: &str) -> Result<Vec<u8>> {
-  let mut file = File::open(path)?;
+  let out_dir = std::env::var("OUT_DIR")?;
+  let spv_path = Path::new(&out_dir).join("shaders").join(path);
+  let mut file = File::open(&spv_path)
+    .map_err(|e| anyhow::anyhow!("Failed to open shader file {:?}: {}", spv_path, e))?;
   let mut buffer = Vec::new();
   file.read_to_end(&mut buffer)?;
+  if buffer.len() % 4 != 0 {
+    return Err(anyhow::anyhow!(
+      "Shader binary size must be a multiple of 4"
+    ));
+  }
   Ok(buffer)
 }
