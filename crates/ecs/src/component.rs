@@ -1,6 +1,6 @@
 use crate::entity::Entity;
-use std::collections::HashMap;
 use std::any::Any;
+use std::collections::HashMap;
 
 pub trait Component: 'static + Send + Sync {}
 impl<T: 'static + Send + Sync> Component for T {}
@@ -12,7 +12,7 @@ pub trait ComponentStorage {
 }
 
 pub struct DenseComponentStorage<T> {
-  data: HashMap<u32, T> // Entity.id -> Component
+  data: HashMap<u32, T>, // Entity.id -> Component
 }
 
 impl<T> Default for DenseComponentStorage<T> {

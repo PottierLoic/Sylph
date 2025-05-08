@@ -2,8 +2,8 @@ use std::any::TypeId;
 use std::collections::HashMap;
 
 use crate::component::{Component, ComponentStorage, DenseComponentStorage};
+use crate::components::{Name, Transform};
 use crate::entity::{Entity, EntityManager};
-use crate::components::{Transform, Name};
 
 #[derive(Default)]
 pub struct World {
@@ -41,7 +41,8 @@ impl World {
   pub fn insert<T: Component>(&mut self, entity: Entity, component: T) {
     let type_id = TypeId::of::<T>();
 
-    let storage = self.storages
+    let storage = self
+      .storages
       .entry(type_id)
       .or_insert_with(|| Box::new(DenseComponentStorage::<T>::default()))
       .as_any_mut()
@@ -54,14 +55,18 @@ impl World {
   pub fn get_component<T: Component>(&self, entity: Entity) -> Option<&T> {
     let type_id = TypeId::of::<T>();
     let storage = self.storages.get(&type_id)?;
-    let storage = storage.as_any().downcast_ref::<DenseComponentStorage<T>>()?;
+    let storage = storage
+      .as_any()
+      .downcast_ref::<DenseComponentStorage<T>>()?;
     storage.get(entity)
   }
 
   pub fn get_component_mut<T: Component>(&mut self, entity: Entity) -> Option<&mut T> {
     let type_id = TypeId::of::<T>();
     let storage = self.storages.get_mut(&type_id)?;
-    let storage = storage.as_any_mut().downcast_mut::<DenseComponentStorage<T>>()?;
+    let storage = storage
+      .as_any_mut()
+      .downcast_mut::<DenseComponentStorage<T>>()?;
     storage.get_mut(entity)
   }
 

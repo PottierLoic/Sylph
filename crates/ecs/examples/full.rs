@@ -1,6 +1,6 @@
-use ecs::world::World;
-use ecs::system::System;
 use ecs::components::Transform;
+use ecs::system::System;
+use ecs::world::World;
 
 #[derive(Debug, Clone)]
 struct Velocity {
@@ -17,10 +17,7 @@ impl System for MovementSystem {
     let entities: Vec<_> = world.entities().alive_iter().collect();
     for entity in entities {
       let vel = world.get_component::<Velocity>(entity).cloned();
-      if let (Some(transform), Some(vel)) = (
-        world.get_component_mut::<Transform>(entity),
-        vel,
-      ) {
+      if let (Some(transform), Some(vel)) = (world.get_component_mut::<Transform>(entity), vel) {
         transform.position[0] += vel.dx;
         transform.position[1] += vel.dy;
       }

@@ -16,7 +16,10 @@ impl EntityManager {
   pub fn create(&mut self) -> Entity {
     if let Some(id) = self.free.pop_front() {
       let generations = self.generations[id as usize];
-      Entity { id, generation: generations }
+      Entity {
+        id,
+        generation: generations,
+      }
     } else {
       let id = self.generations.len() as u32;
       self.generations.push(0);
@@ -33,18 +36,23 @@ impl EntityManager {
   }
 
   pub fn is_alive(&self, entity: Entity) -> bool {
-    self.generations
+    self
+      .generations
       .get(entity.id as usize)
       .is_some_and(|&generation| generation == entity.generation)
   }
 
   pub fn alive_iter(&self) -> impl Iterator<Item = Entity> + '_ {
-    self.generations
+    self
+      .generations
       .iter()
       .enumerate()
       .filter_map(|(id, &generation)| {
         if !self.free.contains(&(id as u32)) {
-          Some(Entity { id: id as u32, generation })
+          Some(Entity {
+            id: id as u32,
+            generation,
+          })
         } else {
           None
         }
