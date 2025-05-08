@@ -10,7 +10,7 @@ use winit::window::Window;
 
 use crate::context::VulkanContext;
 use crate::device::{create_logical_device, pick_physical_device};
-use crate::instance::create_instance;
+use crate::instance::{create_instance, VK_LIBRARY};
 use crate::pipeline::{create_graphics_pipeline, create_pipeline_layout, create_render_pass};
 use crate::swapchain::create_swapchain;
 
@@ -33,7 +33,7 @@ pub struct Renderer {
 impl Renderer {
   pub unsafe fn new(window: &Window, enable_validation: bool) -> Result<Self> {
     unsafe {
-      let loader = LibloadingLoader::new("vulkan-1.dll")?;
+      let loader = LibloadingLoader::new(VK_LIBRARY)?;
       let entry =
         Entry::new(loader).map_err(|e| anyhow!("Failed to create Vulkan entry: {}", e))?;
       let instance = create_instance(&entry, window, enable_validation)?;
