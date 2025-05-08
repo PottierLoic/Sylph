@@ -965,6 +965,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 
 [[package]]
+name = "renderer"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "bytemuck",
+ "log",
+ "thiserror",
+ "vulkanalia",
+ "winit",
+]
+
+[[package]]
 name = "rustix"
 version = "0.38.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"

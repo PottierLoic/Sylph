@@ -8,3 +8,5 @@ anyhow = "1"
 log = "0.4"
 thiserror = "1"
 vulkanalia = { version = "=0.28.0", features = ["libloading", "provisional", "window"] }
+winit = "0.29"
+bytemuck = "1"
